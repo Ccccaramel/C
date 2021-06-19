@@ -1,0 +1,62 @@
+C/C++!
+
+C 和 C++ 的代码都在这里!
+
+实现你的第一个程序
+  第一步:
+    vscode 搜索 C/C++ 插件并下载安装
+  第二步:
+    下载 mingw-w6464
+    官网 http://mingw-w64.org/doku.php
+    (2021/6/14)当前页面有两种操作方式
+      方式一:
+          点击 Downloads 进入新界面
+          直接搜索"SourceForge",它是一个超链接,点击它
+          你会进入到一个新的界面,并且定位到"File"子菜单
+          下拉至"MinGW-W64 GCC-x.x.x"
+          我当前是windows系统
+          所以我选择
+          x86_64-win32-seh
+          他是一个链接,点击下载,下载过程可能会很慢
+          解压后里面会有一个 bin 文件夹,包含 g++.exe
+          打开"环境变量"在 Path 中添加 bin 的路径即可
+          打开指令窗口输入 gcc --version 查看当前版本即为配置成功
+      方式二(不推荐,原因之一是下载速度比方法一慢了一个侏罗纪):
+          下载安装版
+          点击 Downloads 进入新界面
+          找到"Pre-built toolchains and packages"部分
+          根据操作系统找到对应的下载链接,比如 Windows 对应的是"MingW-W64-builds"
+  第三步:
+    编写一个 hello.cpp 文件
+    保存并 Run Code
+    如果失败可尝试重启 VSCode 再试
+  第四步:
+    编译运行产生了很多的 exe 文件?
+    快捷键 Ctrl+, 搜索并打开 settings.json 文件
+    这是一个配置文件,格式类似于 Map 
+    你需要添加一个 "code-runner.executorMap"
+    不要复制粘贴,手动输入通过编辑器的联想功能将所有语言的默认配置显示出来
+    找到 C 和 C++ 的配置行
+      修改前
+        "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
+        "cpp": "cd $dir && g++ $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
+      修改后
+        "c": "cd $dir && gcc $fileName -o D:\\StorageBox\\$fileNameWithoutExt && D:\\StorageBox\\$dir$fileNameWithoutExt",
+        "cpp": "cd $dir && g++ $fileName -o D:\\StorageBox\\$fileNameWithoutExt && D:\\StorageBox\\$dir$fileNameWithoutExt",
+    "D:\\StorageBox\\",这是我为 exe 文件创建的文件夹,将其与源码区分开来
+
+
+task.json
+  负责配置生成可执行文件
+launch.json
+  负责调试
+  externalConsole:[true|false]
+    是否启用外部控制台,有输入值时可启用
+
+Q:C++(mingw)中的 gdb.exe 是什么?
+A:GCC 用于编译程序,而 Linux 的另一个 GNU 工具则用于调试程序
+  GDB 是一个用来调试 C 和 C++ 程序的强力调试器
+  我们通过它进行一系列调试工作,包括设置断点,观察变量,单步调试等
+
+Q:C++ 中的 GCC 与 GDB 的关系?
+A:
