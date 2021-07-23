@@ -38,9 +38,11 @@ C 和 C++ 的代码都在这里!
     不要复制粘贴,手动输入通过编辑器的联想功能将所有语言的默认配置显示出来
     找到 C 和 C++ 的配置行
       修改前
+        "java": "cd $dir && javac $fileName && java $fileNameWithoutExt",
         "c": "cd $dir && gcc $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
         "cpp": "cd $dir && g++ $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
       修改后
+        "java": "cd $dir && javac $fileName -d D:\\StorageBox\\ && cd D:\\StorageBox\\ && java $fileNameWithoutExt",
         "c": "cd $dir && gcc $fileName -o D:\\StorageBox\\$fileNameWithoutExt && D:\\StorageBox\\$dir$fileNameWithoutExt",
         "cpp": "cd $dir && g++ $fileName -o D:\\StorageBox\\$fileNameWithoutExt && D:\\StorageBox\\$dir$fileNameWithoutExt",
     "D:\\StorageBox\\",这是我为 exe 文件创建的文件夹,将其与源码区分开来
