@@ -45,6 +45,25 @@ C 和 C++ 的代码都在这里!
         "cpp": "cd $dir && g++ $fileName -o D:\\StorageBox\\$fileNameWithoutExt && D:\\StorageBox\\$dir$fileNameWithoutExt",
     "D:\\StorageBox\\",这是我为 exe 文件创建的文件夹,将其与源码区分开来
 
+Q:如何执行 exe 可执行文件?
+A:打开 PowerShell 进入 exe 文件所在目录
+  输入 .\[可执行文件名称] 回车即可
+
+Q:vsCode 输出乱码?
+A:可以发现目前 vsCode 的输出终端是 Windows PowerShell
+  以"以管理员身份运行"打开 Windows PowerShell
+  输入 Set-ExecutionPolicy Unrestricted 并回车
+  将一下内容
+    $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding
+  保存至以 profile.ps1 命名的新建文件中
+  将该文件移至
+    C:\Windows\System32\WindowsPowerShell\v1.0
+  文件夹下
+  重新打开 Windows PowerShell 执行 chcp 命令
+  控制台输出 
+    Active code page: 65001
+  则表示成功
+  重启 vsCode 执行代码,中文正常输出
 
 task.json
   负责配置生成可执行文件
@@ -60,3 +79,6 @@ A:GCC 用于编译程序,而 Linux 的另一个 GNU 工具则用于调试程序
 
 Q:C++ 中的 GCC 与 GDB 的关系?
 A:
+
+Linux 下查看 GCC 的宏定义
+  gcc -dM -E - < /dev/null 
