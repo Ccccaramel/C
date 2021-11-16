@@ -1,4 +1,2 @@
-#include <stdio.h>
-int main() {
-    printf("123");
-}
+    strlwr(str2);
+    printf("strlwr(*str2)=%s\n",str2);

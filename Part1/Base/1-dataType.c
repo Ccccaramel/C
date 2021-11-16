@@ -41,9 +41,12 @@ int main()
 
     printf("---float---\n");
     float f1 = 1;
-    printf("%f,%lu\n",f1, sizeof(f1));
+    float f2 = -3;
+    printf("f1=%f,%lu\n",f1, sizeof(f1));
+    printf("f2=%f\n", f2);
     printf("%E\n",FLT_MIN);  // 以指数形式输出单/双精度实数
     printf("%E\n",FLT_MAX);
+    printf("%E\n",FLT_MANT_DIG);
 
     printf("---double---\n");
     double d1 = 1;
