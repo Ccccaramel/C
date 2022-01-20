@@ -1,3 +1,24 @@
+C 语言
+  它是1972年由 D.M. Richie 在美国贝尔实验室设计的一个通用目的程序设计语言
+  他的前身是 B 语言
+  优点:
+    1.简洁灵活
+    2.运算符和数据结构丰富
+    3.具有结构化控制语句
+    4.执行效率高
+    5.具有高级语言与汇编语言的优点
+  缺点:
+    1.类型检查机制相对较弱
+      使得一些错误不能在编译阶段检查出来
+    2.几乎没有支持代码重用的语言结构
+    3.面向过程的编程语言
+      不能满足运用面向对象方法开发软件的需要
+      不适合开发大型程序,当程序规模达到一定程度时,程序员就很难控制程序的复杂性
+
+标准头文件的""与<>
+  <>:先去系统目录中找头文件,若找不到则在当前目录下找,例如标准头文件
+  "":先在当前目录中找头文件,若找不到则去系统目录下找,例如自定义文件
+
 C 的令牌(Token)
   即关键字,标识符,常量,字符串值或一个符号
 
@@ -32,7 +53,18 @@ C 的令牌(Token)
                   double _Imaginary
                   long _Imaginary
                 用 I 表示虚数单位 i
-  inline        内联函数(函数被频繁调用,不断有函数入栈,造成栈空间被大量消耗)
+  inline        内联函数
+
+
+inline
+  当有函数被频繁调用,那么将不断有函数入栈,造成栈空间被大量消耗
+  内联函数的作用是将实参替换成形参
+  消除函数调用时的系统开销,以提高运行速度
+  注意:
+    1.内联函数在被调用前必须进行完整的定义
+    2.内联函数体内一般不能含有复杂的控制语句,比如 for  switch
+    3.使用内联函数是一种用空间换时间的措施
+      若内联函数较长,且调用太频繁时,程序将加长
 
 C 数据类型
   基本类型
@@ -147,6 +179,12 @@ C 常量
         #define LINE '\n';
       const 关键字
         const int VAR = 3; // 必须初始化
+    使用 define 定义常量实际上只是在预编译时进行字符置换
+    把所有程序中出现的标识符全部替换为数据
+    在程序预编译之后程序中就不会存在该标识符
+    该标识符既不是变量也没有类型,不占用存储单元,而且容易出错
+    使用 const 更安全更灵活
+    它是有类型的,占用存储单元,有地址,可以用指针指向它
 
 回车与换行
   符号   ASCII   意义
@@ -248,7 +286,7 @@ C 存储类
 
 **********
 
-自动类变量
+自动类变量(auto)
   在函数内定义的变量
   如果不显示地指定其存储类型
   系统会将其默认为自动类变量
@@ -256,7 +294,938 @@ C 存储类
   自动类变量是在动态存储区内分配单元的(因而也称为动态变量)
   函数返回时,编译系统将释放这些存储单元
 
-静态变量
+静态变量(static)
   如果希望在函数调用结束后任然保留函数中定义的局部变量的值
   则可以将该局部变量定义为静态局部变量
   在定义变量的类型名前使用 static 关键字
+
+寄存器变量(register)
+  一般情况下,变量(包括静态存储方式和动态存储方式)的值是存放在内存中的
+  当程序中用到一个变量的值时,由控制器发出命令将内存中该变量的值送到运算器中经过运算器进行运算
+  如果需要存数,再从运算器将数据送到内存存放
+  如果有某些变量使用频繁,则存储这些变量的值要花不少时间
+  为提高执行效率,C语言允许将局部变量的值放在运算器里的寄存器中
+  需要用时直接从寄存器取出参加运算,不必再到内存中去存取,这样就可以提高执行效率
+  这种变量属于寄存器类变量
+  注意:
+    1.只有局部变量和形参可以定义为寄存器变量
+      其它变量不允许
+    2.不能定义多个寄存器变量
+      由于一个计算机系统中的寄存器数量有限,系统不一定把用户申请的所有寄存器变量都保留在寄存器中
+      当CPU中没有足够的寄存器时,编译程序将认为不适合存放在寄存器中的变量自动按auto变量来处理
+    3.寄存器没有地址
+      若形参 n 为寄存器变量,以 &n 引用 n 是错误的表示形式
+  应用情景:局部变量被多次调用
+
+全局变量(外部变量)
+  函数外定义的变量
+  1.建议只在必要时才使用全局变量
+    全局变量在程序整个执行期间都占用存储单元
+    而不是像自动变量那样在需要时才分配存储单元
+  2.全局变量降低了函数的通用性和程序的可靠性
+    结构化程序设计要求程序模块的内聚性要强,与其他模块的耦合性要弱,而用全局变量不符合这个原则
+    设计C语言程序时,一般要求将函数编制成一个封闭体
+    除了可以通过"实参——形参"的渠道与外界发生联系外,尽量避免其它联系,这样设计出的程序可读性好,可靠性强,容易移植
+  3.全局变量使用过多会降低程序的清晰性
+  此外,允许在同一个源程序文件中,全局变量与局部变量同名
+  此时,在局部变量的作用范围内,全局变量被"屏蔽",不起作用
+  从存储类别角度,所有全局变量均是静态存储
+
+**********
+
+内部函数
+  静态函数,它只能在定义它的源文件中被调用,而不能被其它源文件中的函数所调用
+  定义内部函数时,需要在函数首部的最左端加关键字 static
+
+外部函数
+  凡是不被说明为内部函数的函数均是外部函数
+  外部函数可以被其它源文件中的函数调用
+  在定义时,可以在函数首部的最左端用关键字 extern 显式说明是外部函数
+
+**********
+
+用户自定义数据类型
+
+结构类型
+  结构类型的基本特征
+    1.由多个数据对象聚合而成
+    2.被聚合的数据对象的数据类型可以相同也可以不同
+    3.成员具有相对的独立性,可以被单独访问
+  定义
+    结构类型是聚合数据对象的抽象
+    通常由程序员根据所要建立的聚合数据对象的聚合形态自行定义
+    因此结构类型是用户自定义数据类型
+  定义结构类型的一般形式
+    struct [结构类型名] {
+      成员列表
+    };
+  struct 关键字声明定义一个结构类型
+  定义一个描述学生数据的结构类型
+    struct Student {
+      int age;
+      char name[9];
+      int number;
+      char sex;
+    }Tom; // 成员 Tom
+  允许省略结构类型名,"无名"的结构类型必须后随结构变量(birthday)的定义
+  并且仅能"一处"使用,这种形式通常用于内嵌在结构类型中的结构类型
+    struct {
+      int year;
+      int month;
+      int day;
+    }birthday;
+  结构变量的初始化
+    struct Student {
+      int number;
+      char name[9];
+      struct {
+        int year;
+        int month;
+        int day;
+      }birthday;
+      char sex;
+    }stu={1001,'Tom',2000,1,1,'M'};
+  结构成员的表示
+    struct Student a1,s2[100],*s3=&s1;
+    s1.number;
+    s1.birthday.year;
+    s2[2].number;
+    s3->number;
+    s3->birthday.year; // 访问嵌套的结构成员必须使用 .
+  成员运算符 
+    .:作用在结构变量(含数组元素)上,其左操作数是结构变量名(或数组元素),右操作数是成员者
+    ->:作用在结构指针上,其左操作数是结构指针名,右操作数是成员名
+  不允许将一组常量直接赋值给一个结构变量
+    s1={1001,'Tom',2000,1,1,'M'}; // 错误
+
+结构数组
+  结构数组是基类型为结构类型的数组
+  它既有结构变量的属性,又具有数组的属性
+  定义结构数组的语法格式:
+    struct Student student_table[100];
+    struct Employee {
+      char name[9];
+      char sex;
+      char birthday[9];
+      char dept[11];
+      char ProTitle[9];
+      float salary;
+      float bonus;
+      char health;
+    }employee[5];
+  结构数组的初始化
+    struct Student student[2]={{1001,...},{1002...}};
+    struct Student student[]={{1001,...},{1002...}};
+  引用结构数组元素的成员
+    scanf("%s%c",&employee[0].name,&employee[0].sex);
+
+**********
+
+结构和指针
+  结构变量在内存中的起始地址称为结构变量的指针(简称结构指针)
+  引入结构指针的主要目的是实现结构变量的动态存储分配以及函数之间的双向数据传递
+  定义一个结构指针
+    struct 结构类型名 *结构指针名;
+    struct Employee *EmpPtr;
+    EmpPtr=&employee;
+  通过指针引用结构变量成员
+    结构名指针名->成员名
+    (*EmpPtr).name EmpPtr->name employee.name 等价
+
+指针变量作为结构成员
+  结构变量的成员可以是指针(变量)
+    struct Student {
+      int number;
+      char *name;
+    };
+    struct Student stu={2,"Li"}; // 初始化
+    printf("%s",stu.name);
+  如果没有初始化,则必须调用 calloc 函数为其申请内存空间
+    stu.name=(char*)calloc(21,sizeof(char)); // 申请字符数组所需的空间,并将首地址保存在 name 指针中
+    scanf("%s",stu.name); // 赋值
+
+联合类型
+  将若干个变量组织在一起,使它们能在不同的地方占用同一段内存空间
+  这种数据组合对应的数据类型称为联合类型或共同体类型
+  例如,欲使整型变量a,字符变量b,浮点型变量c在不同的时间占用同一段内存空间
+  可以建立一个联合
+  将它们描述成该联合的三个成员
+  那么编译程序会自动给这三个变量分配同一段内存空间
+  该空间的长度取三个变量中字节数最长者
+  并且3个变量在该空间的起始位置是一样的,但只能分时使用
+  联合在一个时间里不能所有成员同时起作用,只有一个成员起作用
+  而且是最后被赋值的成员
+  定义联合类型
+    union [联合类型名] {
+      成员列表;
+      ...
+    };
+  union 是关键字,表示将定义一个联合类型
+  允许省略联合类型名
+    union data {
+      int a;
+      int b;
+    };
+  联合成员的引用
+    union data {
+      int a;
+      char b;
+      float c;
+    }data_1,*p;
+    data_1.a;
+    (*p).b;
+    p->b;
+
+联合类型与结构类型
+  1.联合类型:不涉及数据抽象,将可以共享内存的若干变量组合在一起,起到节省内存的作用
+    结构类型:对客观世界中的聚合数据的抽象
+  2.联合类型:关键字 union
+    结构类型:关键字 struct
+  3.联合类型:共用一个内存空间
+    结构类型:不共用内存空间
+  4.联合类型:只有一个成员起作用,而且是最后一个被赋值的成员
+    结构类型:所有成员都起作用
+  5.联合类型:长度取所有成员中类型长度最长的长度
+    结构类型:长度为所有成员类型之和
+  6.联合类型:不能在定义联合变量时初始化
+    结构类型:可在定义时初始化
+
+枚举类型(枚类型)
+  它的值域是某个整数集合
+  集合是可以指定的,而且集合中的所有整数都可以命名
+  枚举类型由程序员自行定义,属于用户自定义类型
+  这种类型的变量的值只能是指定的若干个枚举值之一
+  语法格式:
+    enum [枚举类型名] {
+      枚举值表;
+    };
+  enum 为系统保留字,声明要定义一个枚举类型
+  枚举值表
+    给出该类型的值域,列出该类型的所有可能取值
+    枚举值表中的每个值都是一个命名的整型常量,类似于整型的符号常量,也叫枚举元素
+      枚举常量名[=整数]
+  枚举定义样例:
+    enum Week{
+      Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday
+    };
+  由于没有指定各枚举常量对应的整数值
+  就按C语言默认方式取值
+  Sunday,...,Saturday 依次赋值为 0,...,6
+  即 enum Week 的值域为{0,1,2,3,4,5,6}
+  如果将 enum Week 的定义改为
+    enum Week{Sunday=7,Monday=1,Tuesday,Wednesday,Thursday,Friday,Saturday}
+  则 Tuesday,Wednesday,Thursday,Friday,Saturday 依次赋值为 2,...,6
+
+用 typedef 定义类型别名
+  在某些场合需要为已存在的类型起一个别名
+  目的:
+    1.符合个人习惯或使类型名得到简化
+      有的人更习惯于用 INTEGER 来代表整型,而不习惯于用 int
+    2.使原有的类型名更贴近实际应用
+  语法格式:
+    typedef int INTEGER; //声明 INTEGER 是 int 的别名
+    INTEGER a; 与 int a; 是等价的
+  定义一个类型名代表一个结构:
+    方法一:
+      typedef struct {
+        int number;
+        char name[20];
+        float score;
+      } STUDENT;
+      STUDENT stu_1;
+    方法二:
+      struct Student {
+        int number;
+        char name[20];
+        float score;
+      };
+      typedef struct Student STUDENT;
+      STUDENT stu_1;
+  定义数组类型:
+    typedef int COUNT[10]; // 定义 COUNT 为整数指针类型
+    COUNT a,b; // 用 COUNT 定义整型数组a,b,它们都具有10个元素
+  定义指针类型:
+    typedef int *STRING; // 定义 STRING 为整型指针类型
+    STIRNG p1,p2; // p1,p2为整型指针变量
+
+声明类型别名时,建议用大写表示,目的是为了与系统提供的标准类型(系统自定义类型)区分开
+
+**********
+
+流
+  C语言引入流(stream)的概念
+  它将数据的输入输出看作是数据的流入和流出
+  涉及流的输入输出操作函数可用于各种对象,与其具体的实体无关,具有通用性
+  在C语言中流可分为两大类
+  文本流(text stream)
+    指在流中流动的数据是以字符形式存放的
+    字符用ASCII码表示,占一个字节
+  二进制流(binary stream)
+    指流动的数据是按其在内存中的存储形式存放的
+    字符用ASCII码表示,占一个字节
+    整数和浮点数用二进制数表示,占一个整数或浮点数的存储空间
+
+文件
+  在外部介质上以某种形式组织起来的数据集合或设备
+  从不同的角度对文件分类
+  1.用户角度
+    普通文件是指驻留在磁盘或其它外部介质上的一个有序数据集
+    可以是源文件,目标文件,可执行程序
+    也可以是一组待输入处理的原始数据,或是一组输出的结果
+    源文件,目标文件,可执行程序可称为程序文件
+    由输入输出数据组成的文件称为数据文件
+  2.文件编码方式
+    a.ASCII码文件
+      也称文本文件
+      文件的内容是由一个个字符组成的
+      在磁盘中存放时每个字符对应一个字节
+    b.二进制码文件
+      把内存中的数据按其在内存中的存储形式原样输出到磁盘上
+      例如在 Visual C++ 运行环境下,整数10000在内存中以整数形式存放
+        00000000 00000000 00100111 00010000
+      占4个字节
+      当以二进制文件形式输出到磁盘上时
+        00000000 00000000 00100111 00010000
+      同样占4个字节
+
+流和文件
+  在 C 语言中
+  一个文件是一个字节流或二进制流
+  它把数据看作是一连串的字符(字节)
+  对文件的存取是以字符(字节)为单位的
+  输入输出的数据流的开始和结束仅受程序控制而不受乌利符号(如回车换行符)控制
+  把这种文件称为流式文件
+  ***
+  标准输入流,标准输出流和标准错误流是用文件指针 stdin stdout stderr 操作的
+  C 语言有两种对文件的处理方法
+  1.缓冲文件系统
+    指系统自动地在内存区为每一个正在使用的文件开辟一个缓冲区
+    从内存向磁盘输出数据必须先送到内存的缓冲区
+    装满缓冲区后才一起送到磁盘去
+    从磁盘向内存输入数据也同理
+    通过缓冲区在送到内存程序的数据区
+  2.非缓冲文件系统
+    缓冲区系统不会自动创建
+    而是由用户根据解决问题的需要自行创建
+
+文件类型的指针
+  文件类型
+    系统给每个打开的文件分别在内存中开辟一个区域
+    用于存放文件的有关信息(如文件名,文件位置等)
+    这些信息保存在一个结构类型的变量中
+    该结构类型由系统定义,取名为 FILE ,称为文件类型
+    它是在头文件"stdio.h"中定义的,定义如下
+      typedef struct {
+        short level;             // 缓冲区"满"或"空"的程度
+        unsigned flags;          // 文件状态标志
+        char fd;                 // 文件描述符
+        unsigned char hold;      // 如无缓冲区不读取字符
+        short size;              // 缓冲区的大小
+        unsigned char *buffer;   // 数据缓冲区的位置
+        unsigned char *curp;     // 当前活动指针
+        unsigned istemp;         // 文件临时指示器
+        short token;             // 用于有效性检查
+      }FILE;
+  文件指针
+    在 C 语言中用一个指针变量指向一个文件
+    这个指针称为文件指针
+    通过文件指针就可对它所指的文件进行各种操作
+    语法格式:
+      FILE *指针变量名;
+      FILE *fp;
+    表示 fp 是指向 FILE 结构的指针变量
+    通过 fp 即可找到存放某个文件信息的结构变量
+    然后按结构变量提供的信息找到该文件
+    实施对文件的操作
+    习惯上也笼统地把 fp 称为指向一个文件地指针
+
+文件的打开和关闭
+  文件的打开
+    将给用户指定的文件在内存中分配一个 FILE 结构区
+    并将该结构的指针返回给用户程序
+    以后用户程序就可用此 FILE 指针来实现对指定文件的存取操作
+    打开文件的操作通过调用 fopen() 函数完成
+      FILE *fopen(char *filename,char *type);
+    其中 filename 是要打开文件的文件名,一般用双引号括起来
+    其中也可包含双反斜杠隔开的路径名
+    type 参数表示对打开文件的操作方式
+    操作文件的方式共有12种:
+      文件操作方式   含义
+      rt            (文件必须存在)只读打开
+      wt            (文件存在则删除原有文件数据,否则新建)只写打开
+      at            (文件不存在则创建)追加打开
+      rb            (文件必须存在)只读打开二进制文件
+      wb            (文件存在则删除原有文件数据,否则新建)只写打开一个二进制文件
+      ab            (文件不存在则创建)追加打开一个二进制文件
+      rt+           (文件必须存在)读写打开
+      wt+           (文件存在则删除原有文件数据,否则新建)读写打开
+      at+           (文件不存在则创建)追加读写打开
+      rb+           (文件必须存在)读写打开一个二进制文件
+      wb+           (文件存在则删除原有文件数据,否则新建)读写打开一个二进制文件
+      ab+           追加读写打开一个二进制文件
+    关于字符含义:
+      r(read)     (该文件必须存在)读
+      w(write)    (文件存在则删除原有文件数据,否则新建)写
+      a(append)   (文件不存在则创建)追加
+      t(text)     文本文件,可省略
+      b(binary)   二进制文件
+      +           读和追加写
+    注意:
+      1.字符顺序可调换
+      2.用"r"打开的文件必须存在
+      3.用"w"打开的文件只能向该文件写入
+        若不存在则新建
+        若存在会将该文件删除再重新新建
+      4.若向一个已存在的文件追加新信息,只能用"a"方式打开文件
+        此时文件必须存在,否则会报错
+      5.使用 fopen() 成功打开一个文件时,该函数将返回一个 FILE 指针
+        若失败则返回一个 NULL 指针
+      6.把一个文本文件读入内存时,要将 ASCII 码转换成二进制码
+        而把文件以文本方式写入磁盘时,则要把二进制码转换成 ASCII 码
+        二进制文件不需要这种转换
+      7.标准输入文件(键盘),标准输出文件(显示器),标准出错输出(出错信息)是由系统打开的
+        文件指针变量名分别定义为 stdin stdout stderr
+        可直接使用
+  文件关闭
+    文件操作完成后,必须要用 fclose() 函数将文件关闭
+    此操作是因为对打开的文件进行写入时
+    若文件缓冲区的空间未被写入的内容填满,这些内容就不会写到打开的文件中去
+    只有对打开的文件进行关闭操作时,停留正在文件缓冲区的内容才能写到该文件中去
+    从而使文件完整保存
+    再者一旦关闭文件,该文件对应的 FILE 结构将被释放
+    从而使关闭的文件得到保护
+      int fclose(FILE *stream);
+    它表示该函数将关闭 FILE 指针对应的文件,并返回一个数值
+    若成功地关闭了文件则返回一个0
+    否则返回一个非0值
+
+读写函数
+  常见读写函数
+    1.字符读写函数:
+      a.int fgetc(FILE *fp)
+        从指定的打开的文件中每次读取一个字符
+        成功则返回写入的字符的 ASCII 码值
+        失败则返回 EOF 即-1
+        使用该函数后文件内部的位置指针自动移至下一个字节位置
+      b.int fputc(char ch,FILE *fp)
+        将一个字符写到指定的文件中
+        成功则返回写入的字符的 ASCII 码值
+        失败则返回 EOF 即-1
+        在文件内部有一个位置指针,打开文件时总是指向文件的第一个字节,使用该函数后自动移至下一个字节位置
+    2.字符串读写函数
+      a.int fgets(char *str,int n,File *fp)
+        n 表示要读取 *str 的字符个数
+        每次读取 n-1 个字符
+        若在读出 n-1 字符前遇到了换行符或文件结束
+        将独到的字符送到 str 指定的存储区域
+        该函数返回读入字符串的首地址
+        调用出错时返回 NULL
+        读入到 str 中的字符最后加 '\0' 使其成为字符串
+      b.int fputs(char *str,FILE *fp)
+        将一个字符串写到指定的文件中
+        成功返回 0
+        失败返回 EOF
+    3.数据块读写函数
+      一般用于二进制文件的读写
+      a.int fread(char *buf,int size,int n,FILE *fp);
+        buf 用来指向数据块在内存中的起始地址
+        size 表示一个数据项的字节数
+        n 为要读取的数据项的个数
+        fp 为文件指针
+        该函数是从 fp 所指的文件中读取 n 个数据项,每个数据项为 size 字节,将它们读到 buf 所指向的内存缓冲区中
+        函数调用成功则返回实际读入的数据项个数
+        调用失败则返回0
+      b.int fwrite(char *buf,int size,int n,FILE *fp);
+        将一组数据写到指定的文件中
+        该函数将 buf 所指向的缓冲区或数组内的 n 个数据项(每个数据项有 size 个字节)写到 fp 所指向的文件中
+        函数调用成功返回实际写入的数据项数
+    4.格式化读写函数
+      读写对象不是键盘和显示器,而是磁盘文件
+      a.void fscanf(FILE *fp,[格式控制字符串],[输入列表]);
+        fp 指文件指针
+        [格式控制字符串]和[输入列表]与 scanf 函数中的[格式控制字符串]和[输入列表]说明相同
+        该函数是从 fp 所指的文件中,按照[格式控制字符串]规定的输入格式给[输入列表]中各输入项地址赋值
+      b.void fprintf(FILE *fp,[格式控制字符串],[输出列表]);
+        该参数是将[输出列表]中各表达式的值按[格式控制字符串]中指定的格式写到 fp 所指的文件中
+
+文件的定位
+  上文介绍的文件读写方式是顺序读写
+  即读写文件只能从头开始,顺序读写各个数据
+  但在实际问题中常要求只读写文件中某个指定的部分
+  为了解决这个问题,可移动文件内部的位置指针到需要读写的位置再进行读写
+  这种读写称为随机读写
+  1.void rewind(FILE *fp);
+    使文件位置指针重新回到文件的开头位置
+  2.int ftell(FILE *fp);
+    获取文件位置指针的当前位置
+    调用失败返回-1
+  3.void fseek(FILE *fp,int offset,origin);
+    移动文件的位置指针
+    offset 为偏移量,表示相对于起始点向后移动的字节数
+    origin 为起始点,用来计算偏移量的起点,规定的起始点有三种:
+      起始点   表示符号   数字表示
+      文件首   SEEK_SET   0
+      当前位置 SEEK_CUR   1
+      文件末尾 SEEK_END   2
+
+文件的出错检测
+  1.int ferror(FILE *fp);
+    检测文件在用各种输入输出函数进行读写时是否出错
+    未出错返回0
+    出错返回非0
+    对于同一个文件,每次调用输入输出函数均会产生一个新的ferror()函数值
+    因此在调用了输入输出函数后,应立即检测,否则出错信息会丢失
+  2.int feof(FILE *fp);
+    判断文件是否处于文件结束位置
+    返回0表示文件位置指针没有位于文件结束处
+    否则表示文件指针位于文件结束处
+  3.int clearerr(FILE *fp)
+    清除出错标志(ferror()函数的值)和文件结束标志(即feof()函数的值),使它们为0值
+    对于同一文件只要出错就一直保留直至遇到该函数或rewind()函数或其它任何一个输入输出库函数
+
+*****常见函数*****
+getchar()
+  当从键盘输入时,键盘的字符会保存在缓冲区中
+  当点击 Enter 键时缓冲区被清空
+  缓冲区的内容被写入目标内
+  在 13-file.c 的第12行 for 循环中
+  函数 getchar() 每次只获取一个字符并将赋值给 ch 变量
+
+puts()
+  把一个字符串写入到标准输出 stdout 直到空字符,但不包括空字符
+  换行符会被追加到输出中
+   int puts(const char *str);
+  函数执行成功返回一个非负值,为字符串长度(包括末尾的 \0)
+  如果发生错误则返回 EOF 即-1
+
+***字符处理函数表(ctype.h)***
+int isalnum(int c)
+  判断 c 是否为字母或数字
+
+int isalpha(int c)
+  判断 c 是否为字母
+
+int isascii(int c)
+  判断 c 是否为标准 ASCII 字符
+
+int iscntrl(int c)
+  判断 c 是否为控制字符
+
+int isdigit(int c)
+  判断 c 是否为数字
+
+int isgraph(int c)
+  判断 c 是否为除空格以外的可打印字符
+
+int islower(int c)
+  判断 c 是否为小写字母
+
+int isprint(int c)
+  判断 c 是否为可打印的字符
+
+int ispunct(int c)
+  判断 c 是否为标点符号
+
+int isspace(int c)
+  判断 c 是否为空格,制表符或换行符
+
+int isupper(int c)
+  判断 c 是否为大写字母
+
+int isxdigit(int c)
+  判断 c 是否为十六进制数字
+
+int tolower(int c)
+  把字母 c 转换成小写字母 
+
+int toupper(int c)
+  把字母 c 转换成大写字母
+
+***字符串处理函数表(string.h)***
+char* strcat(char *str1,char *str2)
+  将字符串 str2 复制到 str1 后,并返回 str1
+
+char* strchr(char *str,char c)
+  寻找字符 c 在字符串 str 中第一次出现的位置,并返回位置指针(详见 C课后习题>strchr.c)
+
+int strcmp(char *str,char *str2)
+  比较字符串 str1 和 str2 的大小
+
+char* stpcpy(char *str1,char *str2)
+  将字符串 str2 覆盖 str1 ,并返回 str1,注意与 strcat 以及 strcpy 的区别(详见 C课后习题>strcatWithStpcpy.c)
+
+int strlen(char *str)
+  计算字符串 str 的长度
+
+char* strlwr(char *str)
+  将字符串 str 中的所有字母都转换成小写
+
+char* stpncat(char *str1,char *str2,int n)
+  将字符串 str2 的前 n 个字符复制到字符串 str1 后,返回 str1
+
+int strncmp(char *str1,char *str2,int n)
+  比较字符串 str1 和 str2 的前 n 个字符的大小
+
+char* stpncpy(char *str1,char *str2,int n)
+  将字符串 str2 的前 n 个字符覆盖到 str1 中,返回 str1 ,注意与 strncpy 的区别(详见 C课后习题>strcatWithStpcpy.c)
+
+char* strnset(char *str,char c,unsigned n)
+  将字符串 str 的前 n 个字符都设置为字符 c
+
+char* strrchr(char *str,char c)
+  寻找字符 c 在字符串 str 中最后一次出现的位置,返回位置指针(详见 C课后习题>strrchr.c)
+
+char* strrev(char *str)
+  将字符串 str 中所有字符倒置
+
+char* strset(char *str,char c)
+  将字符串 str 中所有字符都设为 c
+
+char* strstr(char *str1,char *str2)
+  寻找字符串 str2 在字符串 str1 中第一次出现的位置,返回位置指针
+
+char* strupr(char *str)
+  将字符串 str 中所有字母都转换为大写字母
+
+***数学函数表(math.h)***
+int abs(int n)
+  计算 n 的绝对值
+
+double acos(double x)
+  计算 x 的反余弦值
+
+double asin(double x)
+  计算 x 的反正弦值
+
+double atan(double x)
+  计算 x 的反正切值
+
+double atan2(double x,double y)
+  计算 x/y 的反切值
+
+double ceil(double x)
+  计算不小于 x 的最小整数值(表示为双精度)
+
+double cos(double x)
+  计算 x 的余弦值
+
+double cosh(double x)
+  计算 x 的双曲余弦值
+
+double exp(double x)
+  计算自然数 e 的 x 次方值 
+
+double fabs(double x)
+  计算浮点数 x 的绝对值
+
+double floor(double x)
+  计算不大于 x 的最大整数值(表示为双精度)
+
+double fmod(double x,double y)
+  计算 x 对 y 的模,即 x/y 的余数值
+
+double labs(long j)
+  计算长整型 j 的绝对值
+
+double log(double x)
+  计算 x 的自然对数(以自然数 e 为底)的值
+
+double log10(double x)
+  计算 x 的常用对数(以10为底)的值
+
+double modf(double x,double *iptr)
+  返回 x 的尾数,指数存到 iptr 所指单元中
+
+double pow(double x,double y)
+  计算 x 的 y 次方值
+
+double pow10(double x)
+  计算10的 x 次方值
+
+double sin(double x)
+  计算 x 的正弦值
+
+double sinh(double x)
+  计算 x 的双曲正弦值
+
+double sqrt(double x)
+  计算 x 的平方根值
+
+double tan(double x)
+  计算 x 的正切值
+
+double tanh(double x)
+  计算 x 的双曲正切值
+
+***随机数函数表(stdlib.h)***
+int rand(void)
+  产生一个0到 RAND_MAX 之间的伪随机整数
+
+int random(int n)
+  产生一个0到 n 之间的伪随机整数
+
+void randomize(void)
+  初始化随机整数发生器
+
+void srand(unsigned seed)
+  用 seed 设置伪随机数序列的开始点
+
+***数据转换函数表(dtdlib.h)***
+double atof(char *str)
+  把字符串 str 转换成双精度浮点数
+
+int atoi(char *str)
+  把字符串 str 转换成整型数
+
+long atol(char *str)
+  把字符串 str 转换成长整型数
+
+char* gcvt(double x,int len,char *str)
+  把浮点数 x 转换成长度为 len 的字符串保存到 str 并返回
+
+char* itoa(int n,char *str,int radix)
+  把整数 n 转换为 radix 进制表示的字符串保存到 str 并返回
+
+***动态分配函数表(alloc.h)***
+void* calloc(unsigned n,unsigned size)
+  分配 n 个大小为 size 字节的内存区并返回首地址
+
+void free(void *ptr)
+  释放 ptr 所指的内存区
+
+void* malloc(unsigned size)
+  分配大小为 size 字节的内存区并返回首地址
+
+void* realloc(void *ptr,unsigned newsize)
+  将 ptr 所指的内存区大小改为 newsize 字节并返回首地址
+
+***控制台输入输出函数表(conio.h)***
+int getch(void)
+  从键盘读入一个字符,不回显
+
+int getchar(void)
+  从键盘读入一个字符,并回显
+
+int putch(int ch)
+  输出字符 ch 到屏幕
+
+***标准设备输入输出函数表(stdio.h)***
+int fflush(stdio)
+  清除键盘的输入流中的内容
+
+int getchar(void)
+  从键盘的输入流中读取一个字符,并回显
+
+char* gets(char *str)
+  从键盘的输入流中读取一个字符串到 str 中,返回 str
+
+int printf(char *format,argument,...)
+  以 format 指定的格式输出 argument 的值到屏幕
+
+int putchar(int ch)
+  输出字符 ch 到屏幕
+
+int puts(char *str)
+  输出字符串 str 到屏幕
+
+int scanf(char *format,argument,...)
+  从键盘的输入流中按 format 指定的格式,读取数据到 argument 所指的内存单元
+
+***文件输入输出函数表(stdio.h)***
+int fclose(FILE *fp)
+  关闭 fp 所指文件
+
+int feof(FILE *fp)
+  检测 fp 所指文件是否结束
+
+int ferror(FILE *fp)
+  检测 fp 所指文件上的错误
+
+int fgetc(FILE *fp)
+  从 fp 所指文件中读取一个字符
+
+char* fgets(char *str,int n,FILE *fp)
+  从 fp 所指文件中读取 n-1 个字符到 str 中,返回 str
+
+FILE* fopen(char *fname,char *type)
+  以 type 指定的方式打开名为 fname 的文件,返回文件指针
+
+int fprintf(FILE *fp,char *format,argument,...)
+  以 format 指定的格式输出 argument 的值到 fp 所指文件中
+
+int fputc(int ch,FILE *fp)
+  输出字符 ch 到 fp 所指文件中
+
+int fputs(char *str,FILE *fp)
+  输出字符串 str 到 fp 所指文件中
+
+int fread(void *buf,int size,int n,FILE *fp)
+  从 fp 所指文件中读取 n 个长度为 size 字节的数据块,存到 buf 所指的内存区
+
+int fscanf(FILE *fp,char *format,argument,...)
+  从 fp 所指文件中按 format 指定的格式,读取数据到 argument 所指的内存单元
+
+int fseek(FILE *fp,long offset,int origin)
+  重定位 fp 所指文件的位置指针到以 origin 为起始点, offset 为偏移量的位置
+
+long ftell(FILE *fp)
+  返回 fp 所指文件的位置指针的当前位置
+
+int fwrite(void *buf,int size,int n,FILE *fp)
+  将 buf 所指的 n 个长度为 size 字节的数据块,写到 fp 所指文件中
+
+int getc(FILE *fp)
+  从 fp 所指文件中读取一个字符
+
+int putc(int ch,FILE *fp)
+  输出字符 ch 到 fp 所指文件中
+
+int remove(char *filename)
+  删除名为 filename 的文件
+
+int rename(char *oldname,char *newname)
+  将名为 oldname 的文件重命名为 newname
+
+int rewind(FILE *fp)
+  将 fp 所指文件的位置指针重新置于文件开头位置
+
+***驱动器_目录函数表(dir.h)***
+int chdir(char *pathname)
+  将名为 pathname 的目录作为当前目录
+
+int getcurdir(int drive,char *dir)
+  取 drive 指定的驱动器的当前目录存到 dir
+
+int getdisk(void)
+  返回当前磁盘驱动器号
+
+int mkdir(char *pathname)
+  建立名为 pathname 的新目录
+
+int rmdir(char *pathname)
+  删除名为 pathname 的目录
+
+int setdisk(int drive)
+  设置 drive 指定的驱动器为当前驱动器
+
+***终止程序函数表(process.h)***
+void abort(void)
+  异常终止程序的运行
+
+void exit(int status)
+  正常终止程序的运行
+
+*****ASCII*****
+十进制 十六进制 字符   十进制 十六进制 字符   十进制 十六进制 字符
+0      00      NUL    33     21      !      96     60       `
+1      01      SOH    34     22      "      97     61      a
+2      02      STX    35     23      #      <...>
+3      03      ETX    36     24      $      122    7A      z
+4      04      EOT    37     25      %      123    7B      {
+5      05      ENQ    38     26      &      124    7C      |
+6      06      ACK    39     27      '      125    7D      }
+7      07      BEL    40     28      (      126    7E      ~
+8      08      BS     41     29      )      127    7F      DEL
+9      09      HT     42     2A      *
+10     0A      LF     43     2B      +
+11     0B      VT     44     2C      ,
+12     0C      FF     45     2D      -
+13     0D      CR     46     2E      .
+14     0E      SO     47     2F      /
+15     0F      SI     48     30      0
+16     10      DLE    <...>
+17     11      DC1    57     39      9
+18     12      DC2    58     3A      :
+19     13      DC3    59     3B      ;
+20     14      DC4    60     3C      <
+21     15      NAK    61     3D      =
+22     16      SYN    62     3E      >
+23     17      ETB    63     3F      ?
+24     18      CAN    64     40      @
+25     19      EM     65     21      A
+26     1A      SUB    <...>
+27     1B      CAN    90     5A      Z
+28     1C      FS     91     5B      [
+29     1D      GS     92     5C      \
+30     1E      RS     93     5D      ]
+31     1F      US     94     5E      ^
+32     20      SP     95     5F      _
+
+*****关键字*****
+auto     break     case      char      const     continue  default
+do       double    else      enum      extern    float     for
+goto     if        int       long      register  return    short
+signed   static    sizeof    struct    switch    typeof    union
+unsigned void      volatile  while
+
+***** printf 函数的格式控制*****
+printf 函数中格式字符串的一般形式:
+  %[标志][输出最小宽度][,精度][长度]类型
+  其中 [] 中的项为可选项
+  1.类型
+    格式字符   作用
+    d,i        以十进制形式输出带符号整数(正数不输出符号)
+    o          以八进制形式输出无符号整数(不输出前缀0)
+    x,X        以十六进制形式输出无符号整数(不输出前缀0x,0X)
+    u          以十进制形式输出无符号整数
+    f          以小数形式输出单,双精度浮点数
+    e,E        以指数形式输出单,双精度浮点数
+    g,G        以 %f 或 %e 中较短的输出宽度输出单,双精度浮点数
+    c          输出单个字符
+    s          输出字符串
+  2.标志
+    标志   作用
+    -      结果左对齐,右边填空格
+    +      输出符号(正号或负号)
+    空格   输出值为正时冠以空格,为负时冠以负号
+    #      对 c s d u 类无影响
+           对 o 类在输出时加前缀 0
+           对 x(X) 类在输出时加前缀 0x(0X)
+           对 e g f 类当结果有小数时才给出小数点
+  3.输出最小宽度
+    用十进制整数来表示输出的最少位数
+    若实际位数多于定义的高度则按实际位数输出
+    若少于实际位数少于定义的宽度则补以空格或0
+  4.精度
+    精度格式符以"."开头,后跟十进制整数
+    本项的意义是,如果输出数字则表示小数的位数
+    如果输出的是字符则表示输出字符的个数
+    若实际位数大于所定义的精度数则截去超过的部分
+  5.长度
+    长度格式符为 h l 两种
+    h 表示按短整型量输出
+    l 表示按长整型量输出
+
+***** scanf 函数的格式控制*****
+  scanf 函数格式字符串的一般形式:
+    %[*][输入数据宽度][长度]类型
+  1.类型
+    格式     作用
+    d        输入十进制整数
+    i        输入十进制整数,以前导 0 开始的八进制整数或以 0x 开始的十六进制整数
+    o        输入八进制整数
+    x        输入十六进制整数
+    u        输入无符号十进制整数
+    f 或 e   输入单精度浮点数(用小数形式或指数形式)
+    lf 或 le 输入双精度浮点数(用小数形式或指数形式)
+    c        输入单个字符
+    s        输入字符串
+  2."*"符
+    用以表示该输入项读入后不赋予相应的变量,即跳过该输入值
+    例1:
+      scanf("%d%*d%d",&a,&b);
+      当输入 1 2 3时,把1赋予 a ,2被跳过,3赋予 b
+  3.宽度
+    用十进制整数指定输入的宽度(即字符数)
+      例1:
+        scanf("%5d",&a);
+        输入:12345678
+        只要把12345赋予变量 a ,其余部分被截去
+      例2:
+        scanf("%4d%4d",&a,&b);
+        输入:12345678
+        将把1234赋予 a ,把5678赋予 b
+  4.长度
+    长度格式为 l 和 h
+    l 表示输入长整型数据(如%ld)和双精度浮点数(如%lf)
+    h 表示输入短整型数据

@@ -16,11 +16,6 @@ int add(int a, int b)
     return a + b;
 }
 
-void add1(int a, int b, int *c)
-{
-    *c = a + b;
-}
-
 char *strcat(char *s1, char *s2)
 {
     char *p = s1;

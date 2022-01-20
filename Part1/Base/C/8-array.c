@@ -71,9 +71,11 @@ int main()
      * 即使你输入的字符串长度超过3,程序也可能"正常"执行
      * C/C++不检查数组越界,不报错只是运气好
     */
-    char arr10[3];
+    char arr10[3],arr11[3];
     scanf("%s",&arr10);
-    printf("%s",arr10);
+    printf("%s\n",arr10);
+    // arr11=arr10; // 这是错误的,arr11和arr10都是常量,常量不能在等号左边
+    printf("arr11:%s\n",arr11);
 
     // char arr11[];  //不允许使用不完整的类型
 }

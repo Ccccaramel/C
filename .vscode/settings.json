@@ -1,6 +1,11 @@
 {
     "files.associations": {
         "*.java": "java",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "cstdlib": "c",
+        "sstream": "c",
+        "cstdio": "c",
+        "ostream": "cpp",
+        "iostream": "cpp"
     }
 }
