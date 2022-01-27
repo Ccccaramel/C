@@ -1,6 +1,6 @@
 #include <iostream>
 using namespace std;
-int add1(int a, int b = 6);
+int add1(int a, int b = 6); // 函数原型声明
 double add1(double a, double b);
 int main()
 {

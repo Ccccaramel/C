@@ -6,6 +6,12 @@
         "sstream": "c",
         "cstdio": "c",
         "ostream": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "algorithm": "cpp",
+        "istream": "cpp",
+        "limits": "cpp",
+        "streambuf": "cpp",
+        "*.tcc": "cpp",
+        "tuple": "cpp"
     }
 }
