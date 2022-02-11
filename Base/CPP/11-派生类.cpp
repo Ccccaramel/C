@@ -7,7 +7,7 @@ private:
     void showAPri()
     {
         cout << "showAPri()" << endl;
-    };
+    }; // 在类内部实现的成员函数末尾可以不加分号,但建议加上
 
 protected:
     int pro_a;
@@ -31,7 +31,7 @@ public:
     void hi()
     {
         cout << "hi!A." << endl;
-    }
+    };
 };
 class B : private A
 {

@@ -4,7 +4,7 @@ using namespace std;
 class Score
 {
 public:
-    Score(double c = 0, double e = 0, double m = 0);
+    Score(double c = 0, double e = 0, double m = 0); // 成员函数的声明结尾必须要有分号
     void show();
 
 private:

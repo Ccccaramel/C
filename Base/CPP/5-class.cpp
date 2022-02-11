@@ -4,7 +4,7 @@ class Date
 {
 public:
     Date();
-    Date(int y, int m, int d);
+    Date(int y, int m, int d); // 默认值既可以在声明时加上,也可以在实现时加上
     void setDate(int, int, int); // 参数名称可省略,但类型不可省略
     void showDate();
     int num;
