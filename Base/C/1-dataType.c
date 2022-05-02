@@ -21,9 +21,11 @@ int main()
     int i1 = 2147483647;
     int i2 = 2147483648;
     unsigned int i3 = 0;
+    int i4=3.2;
     printf("%d,%d\n", i1, sizeof(i1));
     printf("%d,%d\n", i2, sizeof(i2));
     printf("%d,%d\n", i3, sizeof(i3));
+    printf("%d,%d\n", i4, sizeof(i4));
 
     printf("---short---\n");
     short s1 = 32767;
